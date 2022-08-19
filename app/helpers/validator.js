@@ -7,7 +7,7 @@ module.exports.validEmail = (email) => {
 
 module.exports.validPassword = (password) => {
     const validatePassword =
-        /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
     return validatePassword.test(password);
 };

@@ -23,10 +23,8 @@ module.exports.registerUsers = async (req, res) => {
     if (!validEmail(login)) errorsArray.push('Please enter valid email!');
     if (!validPassword(password))
         errorsArray.push(
-            'Password must contain at least one number and special symbol!'
+            'Password has to be at least 8 symbols long and must contain at least one number and special symbol!'
         );
-    if (password.length < 8)
-        errorsArray.push('Password must be at least 10 characters long!');
 
     if (errorsArray.length) {
         return res.status(422).send({ answer: errorsArray });
