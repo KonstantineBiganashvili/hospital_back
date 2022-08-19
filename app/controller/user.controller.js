@@ -1,6 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../model/User');
+const validators = require('../helpers/validator');
+
+const { emailValidator, passwordValidator } = validators;
 
 // For testing, will remove later
 module.exports.getUsers = async (req, res) => {
@@ -17,17 +20,23 @@ module.exports.registerUsers = async (req, res) => {
     const { login, password } = req.body;
     const errorsArray = [];
 
-    const validateEmail =
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (
+        !emailValidator(login) ||
+        !passwordValidator(password) ||
+        password.length < 8
+    ) {
+        if (!emailValidator(login))
+            errorsArray.push('Please enter valid email!');
+        if (!passwordValidator(password))
+            errorsArray.push(
+                'Password must contain at least one number and special symbol!'
+            );
+        if (password.length < 8)
+            errorsArray.push('Password must be at least 10 characters long!');
 
-    const validatePassword =
-        /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-
-    if (!login && !password) {
-        if (!login) errorsArray.push('Email must not be empty!');
-        if (!password) errorsArray.push('Password must not be empty!');
-        if (errorsArray.length)
-            return res.status(400).send({ answer: errorsArray });
+        if (errorsArray.length) {
+            return res.status(422).send({ answer: errorsArray });
+        }
     }
 
     const oldUser = await User.findOne({ where: { login } });
@@ -36,25 +45,6 @@ module.exports.registerUsers = async (req, res) => {
             'User with this email already exists, please use different email!'
         );
         return res.status(409).send({ answer: errorsArray });
-    }
-
-    if (
-        !validateEmail.test(login) ||
-        !validatePassword.test(password) ||
-        password.length < 8
-    ) {
-        if (!validateEmail.test(login))
-            errorsArray.push('Please enter valid email!');
-        if (!validatePassword.test(password))
-            errorsArray.push(
-                'Password must contain at least one number and special symbol!'
-            );
-        if (password.length < 8)
-            errorsArray.push('Password must be at least 10 characters long!');
-
-        if (errorsArray.length) {
-            return res.status(400).send({ answer: errorsArray });
-        }
     }
 
     try {
