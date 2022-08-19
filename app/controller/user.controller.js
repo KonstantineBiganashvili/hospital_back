@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../model/User');
 const validators = require('../helpers/validator');
 
-const { emailValidator, passwordValidator } = validators;
+const { validEmail, validPassword } = validators;
 
 // For testing, will remove later
 module.exports.getUsers = async (req, res) => {
@@ -20,23 +20,16 @@ module.exports.registerUsers = async (req, res) => {
     const { login, password } = req.body;
     const errorsArray = [];
 
-    if (
-        !emailValidator(login) ||
-        !passwordValidator(password) ||
-        password.length < 8
-    ) {
-        if (!emailValidator(login))
-            errorsArray.push('Please enter valid email!');
-        if (!passwordValidator(password))
-            errorsArray.push(
-                'Password must contain at least one number and special symbol!'
-            );
-        if (password.length < 8)
-            errorsArray.push('Password must be at least 10 characters long!');
+    if (!validEmail(login)) errorsArray.push('Please enter valid email!');
+    if (!validPassword(password))
+        errorsArray.push(
+            'Password must contain at least one number and special symbol!'
+        );
+    if (password.length < 8)
+        errorsArray.push('Password must be at least 10 characters long!');
 
-        if (errorsArray.length) {
-            return res.status(422).send({ answer: errorsArray });
-        }
+    if (errorsArray.length) {
+        return res.status(422).send({ answer: errorsArray });
     }
 
     const oldUser = await User.findOne({ where: { login } });
