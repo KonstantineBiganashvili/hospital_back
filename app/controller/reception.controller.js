@@ -54,3 +54,21 @@ module.exports.getReceptions = async (req, res) => {
         return res.send({ message: error.message });
     }
 };
+
+module.exports.deleteReceptionById = async (req, res) => {
+    const { id } = req.params;
+    const { user_id } = req;
+
+    if (!id.trim())
+        return res.status(422).send({ anwer: 'Invalid ID has been passed' });
+
+    try {
+        const remove = await Reception.destroy({
+            where: { id, userId: user_id },
+        });
+        if (remove) return await this.getReceptions(req, res);
+        return res.stats(404).send({ message: 'Reception does not exist!' });
+    } catch (error) {
+        return res.status(422).send({ message: error.message });
+    }
+};

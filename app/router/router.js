@@ -14,6 +14,10 @@ router
     .post(verifyToken, receptionController.postReception)
     .get(verifyToken, receptionController.getReceptions);
 
+router
+    .route('/api/receptions/:id')
+    .delete(verifyToken, receptionController.deleteReceptionById);
+
 app.use(router);
 
 module.exports = router;
