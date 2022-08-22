@@ -56,7 +56,7 @@ module.exports.registerUsers = async (req, res) => {
 
         user.token = token;
 
-        return res.status(201).send(user);
+        return res.status(201).send({ login, token });
     } catch (error) {
         return res.status(422).send({ message: error.message });
     }
@@ -67,7 +67,9 @@ module.exports.loginUsers = async (req, res) => {
     const { login, password } = req.body;
 
     if (!login.trim() || !password.trim()) {
-        res.status(400).send({ answer: 'You have to enter all fields!' });
+        return res
+            .status(400)
+            .send({ answer: 'You have to enter all fields!' });
     }
 
     try {
@@ -84,7 +86,7 @@ module.exports.loginUsers = async (req, res) => {
 
             user.token = token;
 
-            return res.status(200).json(user);
+            return res.status(200).json({ id: user.id, token });
         }
 
         return res.status(400).send({ message: 'Invalid credentials!' });
