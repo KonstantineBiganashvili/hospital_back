@@ -83,41 +83,40 @@ module.exports.editReceptionById = async (req, res) => {
 
     if (!id.trim()) return errorsArray.push('Invalid ID has been passed!');
 
-    if (!patient_name && !appointment_time && !complaints && doctorId) {
-        errorsArray.push('You must change at least one field!');
-    } else {
-        if (patient_name) {
-            if (!validName(patient_name)) {
-                errorsArray.push('You must enter a valid patient name!');
-            } else {
-                validFields.patient_name = patient_name;
-            }
-        }
+    if (!patient_name && !appointment_time && !complaints && doctorId)
+        return res.status(422).send('You must change at least one field!');
 
-        if (appointment_time) {
-            if (!appointment_time.trim()) {
-                errorsArray.push('Appointment time field is required!');
-            } else {
-                validFields.appointment_time = appointment_time;
-            }
+    if (patient_name) {
+        if (!validName(patient_name)) {
+            errorsArray.push('You must enter a valid patient name!');
+        } else {
+            validFields.patient_name = patient_name;
         }
+    }
 
-        if (complaints) {
-            if (!complaints.trim()) {
-                errorsArray.push('Complaints field is required!');
-            } else {
-                validFields.complaints = complaints;
-            }
+    if (appointment_time) {
+        if (!appointment_time.trim()) {
+            errorsArray.push('Appointment time field is required!');
+        } else {
+            validFields.appointment_time = appointment_time;
         }
+    }
 
-        if (doctorId) {
-            if (!doctorId.trim() || !typeof doctorId === 'number') {
-                errorsArray.push(
-                    'Doctor ID field is required and must be a nunber'
-                );
-            } else {
-                validFields.doctorId = doctorId;
-            }
+    if (complaints) {
+        if (!complaints.trim()) {
+            errorsArray.push('Complaints field is required!');
+        } else {
+            validFields.complaints = complaints;
+        }
+    }
+
+    if (doctorId) {
+        if (!doctorId.trim() || !typeof doctorId === 'number') {
+            errorsArray.push(
+                'Doctor ID field is required and must be a nunber'
+            );
+        } else {
+            validFields.doctorId = doctorId;
         }
     }
 
