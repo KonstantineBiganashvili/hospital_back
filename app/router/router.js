@@ -16,7 +16,8 @@ router
 
 router
     .route('/api/receptions/:id')
-    .delete(verifyToken, receptionController.deleteReceptionById);
+    .delete(verifyToken, receptionController.deleteReceptionById)
+    .patch(verifyToken, receptionController.editReceptionById);
 
 app.use(router);
 
