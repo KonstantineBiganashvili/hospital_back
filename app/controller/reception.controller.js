@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 const Reception = require('../model/Reception');
+const Doctor = require('../model/Doctor');
 
 const { validName } = require('../helpers/validator');
 
@@ -29,6 +30,26 @@ module.exports.postReception = async (req, res) => {
         });
 
         return reception && (await this.getReceptions(req, res));
+    } catch (error) {
+        return res.send({ message: error.message });
+    }
+};
+
+module.exports.getReceptions = async (req, res) => {
+    const { user_id } = req;
+
+    try {
+        const reception = await Reception.findAll({
+            where: { userId: user_id },
+            include: [
+                {
+                    model: Doctor,
+                    attributes: ['doctor_name', 'specialization'],
+                },
+            ],
+        });
+
+        return res.send(reception);
     } catch (error) {
         return res.send({ message: error.message });
     }
