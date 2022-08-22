@@ -11,7 +11,7 @@ module.exports.getUsers = async (req, res) => {
         const users = await User.findAll();
         res.send(users);
     } catch (error) {
-        res.status(422).send({ answer: error });
+        res.status(422).send({ answer: error.message });
     }
 };
 
@@ -46,14 +46,49 @@ module.exports.registerUsers = async (req, res) => {
             password: encryptedPassword,
         });
 
-        const token = jwt.sign(user.id, login, process.env.TOKEN_KEY, {
-            expiresIn: '2h',
-        });
+        const token = jwt.sign(
+            { user_id: user.id, login, password },
+            process.env.TOKEN_KEY,
+            {
+                expiresIn: '2h',
+            }
+        );
 
         user.token = token;
 
         return res.status(201).send(user);
     } catch (error) {
-        return res.status(422).send({ message: error });
+        return res.status(422).send({ message: error.message });
+    }
+};
+
+// User login function
+module.exports.loginUsers = async (req, res) => {
+    const { login, password } = req.body;
+
+    if (!login.trim() || !password.trim()) {
+        res.status(400).send({ answer: 'You have to enter all fields!' });
+    }
+
+    try {
+        const user = await User.findOne({ where: { login } });
+
+        if (user && (await bcrypt.compare(password, user.password))) {
+            const token = jwt.sign(
+                { user_id: user.id, login, password },
+                process.env.TOKEN_KEY,
+                {
+                    expiresIn: '2h',
+                }
+            );
+
+            user.token = token;
+
+            return res.status(200).json(user);
+        }
+
+        return res.status(400).send({ message: 'Invalid credentials!' });
+    } catch (error) {
+        return res.status(422).send({ message: error.message });
     }
 };
