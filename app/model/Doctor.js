@@ -7,6 +7,9 @@ const Doctor = sequelize.define(
         doctor_name: {
             type: DataTypes.STRING,
         },
+        specialization: {
+            type: DataTypes.STRING,
+        },
     },
     { timestamps: false }
 );
