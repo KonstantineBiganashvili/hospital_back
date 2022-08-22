@@ -12,7 +12,7 @@ router.post('/api/login', controller.loginUsers);
 // For testing, will remove later
 router.route('/api/users').get(controller.getUsers);
 router.post('/welcome', verifyToken, (req, res) =>
-    res.status(200).send({ Welcome: req.id })
+    res.status(200).send({ Welcome: req.user_id })
 );
 
 app.use(router);
