@@ -11,3 +11,9 @@ module.exports.validPassword = (password) => {
 
     return validatePassword.test(password);
 };
+
+module.exports.validName = (name) => {
+    const validateName = /^[A-Za-z ]+$/;
+
+    return validateName.test(name);
+};
