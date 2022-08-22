@@ -11,7 +11,8 @@ router.post('/api/register', userController.registerUsers);
 router.post('/api/login', userController.loginUsers);
 router
     .route('/api/receptions')
-    .post(verifyToken, receptionController.postReception);
+    .post(verifyToken, receptionController.postReception)
+    .get(verifyToken, receptionController.getReceptions);
 
 app.use(router);
 
