@@ -11,10 +11,9 @@ module.exports.verifyToken = (req, res, next) => {
             .status(403)
             .send({ message: 'A token is required for authentication' });
     }
-
     try {
         const decoded = jwt.verify(token, config.TOKEN_KEY);
-        req.user = decoded;
+        req.id = decoded.user_id;
     } catch (error) {
         return res.status(401).send('Invalid Token!');
     }

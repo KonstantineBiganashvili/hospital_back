@@ -86,7 +86,7 @@ module.exports.loginUsers = async (req, res) => {
 
             user.token = token;
 
-            return res.status(200).json({ id: user.id, token });
+            return res.status(200).json({ login, token });
         }
 
         return res.status(400).send({ message: 'Invalid credentials!' });
