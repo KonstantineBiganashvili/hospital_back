@@ -12,7 +12,7 @@ module.exports.postReception = async (req, res) => {
 
     if (!validName(patient_name))
         errorsArray.push('You must enter a valid patient name!');
-    if (!appointment_time.trim())
+    if (!String(appointment_time).trim())
         errorsArray.push('Appointment time field is required!');
     if (!complaints.trim()) errorsArray.push('Complaints field is required!');
     if (!doctorId || Number.isNaN(doctorId))
@@ -95,7 +95,7 @@ module.exports.editReceptionById = async (req, res) => {
     }
 
     if (appointment_time) {
-        if (!appointment_time.trim()) {
+        if (!String(appointment_time).trim()) {
             errorsArray.push('Appointment time field is required!');
         } else {
             validFields.appointment_time = appointment_time;

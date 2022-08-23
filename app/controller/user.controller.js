@@ -64,9 +64,10 @@ module.exports.registerUsers = async (req, res) => {
 
 // User login function
 module.exports.loginUsers = async (req, res) => {
+    console.log(req.body);
     const { login, password } = req.body;
 
-    if (!login.trim() || !password.trim()) {
+    if (!login || !login.trim() || !password || !password.trim()) {
         return res
             .status(400)
             .send({ answer: 'You have to enter all fields!' });
