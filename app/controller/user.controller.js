@@ -5,16 +5,6 @@ const validators = require('../helpers/validator');
 
 const { validEmail, validPassword } = validators;
 
-// For testing, will remove later
-module.exports.getUsers = async (req, res) => {
-    try {
-        const users = await User.findAll();
-        res.send(users);
-    } catch (error) {
-        res.status(422).send({ answer: error.message });
-    }
-};
-
 // User registration functionale
 module.exports.registerUsers = async (req, res) => {
     const { login, password } = req.body;
@@ -27,7 +17,7 @@ module.exports.registerUsers = async (req, res) => {
         );
 
     if (errorsArray.length) {
-        return res.status(422).send({ answer: errorsArray });
+        return res.status(422).send({ message: errorsArray });
     }
 
     const oldUser = await User.findOne({ where: { login } });
@@ -35,7 +25,7 @@ module.exports.registerUsers = async (req, res) => {
         errorsArray.push(
             'User with this email already exists, please use different email!'
         );
-        return res.status(409).send({ answer: errorsArray });
+        return res.status(409).send({ message: errorsArray });
     }
 
     try {
@@ -64,13 +54,12 @@ module.exports.registerUsers = async (req, res) => {
 
 // User login function
 module.exports.loginUsers = async (req, res) => {
-    console.log(req.body);
     const { login, password } = req.body;
 
     if (!login || !login.trim() || !password || !password.trim()) {
         return res
             .status(400)
-            .send({ answer: 'You have to enter all fields!' });
+            .send({ message: 'You have to enter all fields!' });
     }
 
     try {
