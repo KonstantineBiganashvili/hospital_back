@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const userController = require('../controller/user.controller');
+const doctorController = require('../controller/doctor.controller');
 const receptionController = require('../controller/reception.controller');
 const { verifyToken } = require('../middleware/auth');
 
@@ -18,6 +19,8 @@ router
     .route('/api/receptions/:id')
     .delete(verifyToken, receptionController.deleteReceptionById)
     .patch(verifyToken, receptionController.editReceptionById);
+
+router.get('/api/doctors', verifyToken, doctorController.getDoctors);
 
 app.use(router);
 

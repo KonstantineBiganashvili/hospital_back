@@ -12,9 +12,10 @@ module.exports.postReception = async (req, res) => {
 
     if (!validName(patient_name))
         errorsArray.push('You must enter a valid patient name!');
-    if (!String(appointment_time).trim())
+    if (!appointment_time || !String(appointment_time).trim())
         errorsArray.push('Appointment time field is required!');
-    if (!complaints.trim()) errorsArray.push('Complaints field is required!');
+    if (!complaints || !complaints.trim())
+        errorsArray.push('Complaints field is required!');
     if (!doctorId || Number.isNaN(doctorId))
         errorsArray.push('Doctor ID field is required and must be a number!');
 
@@ -44,7 +45,7 @@ module.exports.getReceptions = async (req, res) => {
             include: [
                 {
                     model: Doctor,
-                    attributes: ['doctor_name', 'specialization'],
+                    attributes: ['id', 'doctor_name', 'specialization'],
                 },
             ],
         });
